@@ -12,7 +12,7 @@
 
     <body>
         {{ with .Site.GetPage "/home" }}
-        <section id="top" class="hero is-{{ .Site.Params.home.introHeight | default "fullheight" }}">
+        <section id="top" class="hero is-{{ .Site.Params.home.introHeight | default `fullheight` }}">
             <!-- Hero head section to play nice with Bulma -->
             <div class="hero-head"></div>
 
@@ -20,6 +20,9 @@
             <div class="hero-body">
                 <div class="container has-text-centered">
                     <!-- Title and tagline -->
+                    <div class="subtitle is-3 {{ if or (.Site.Params.fadeIn | default true) .Site.Params.fadeInIndex }}fade-in two{{ end }}">
+                        We are
+                    </div>
                     <h1 class="bold-title {{ if or (.Site.Params.fadeIn | default true) .Site.Params.fadeInIndex }}fade-in one{{ end }}">
                         {{ .Title | markdownify }}
                     </h1>
@@ -50,22 +53,15 @@
             {{ $pages = $pages | append . }}
         {{ end }}
 
-        {{ with .Site.GetPage "/projects" }}
-            {{ $pages = $pages | append . }}
-        {{ end }}
-
         {{ range sort $pages "Params.weight" }}
         {{ if ne .Name "contact.md" }}
         {{ if .File }}
-        {{ if eq (os.Stat .File.Dir).Name "projects" }}
-            <!-- Now for some cool projects -->
-            {{ partial "home/projects.html" . }}
-        {{ else if eq (os.Stat .File.Dir).Name "blog" }}
+        {{ if eq (os.Stat .File.Dir).Name "blog" }}
             <!-- Let`s show some blog posts -->
             {{ partial "home/blog.html" . }}
         {{ else }}
 
-        <!-- Range through all sections in /home execept contact.md -->
+        <!-- Range through all sections in /home except contact.md -->
         <div class="section" id="{{ .File.TranslationBaseName }}">
             <div class="container">
                 <h2 class="title is-2 has-text-centered">{{ .Title | markdownify }}</h2>
@@ -103,17 +99,16 @@
         <div class="section" id="{{ .File.TranslationBaseName }}">
             <div class="container has-text-centered">
                 <h2 class="title is-2">{{ .Title | markdownify }}</h2>
-                <div class="markdown">
-                    {{ .Content }}
-                </div>
                 {{ if .Site.Params.home.localTime }}
                 <p>{{ i18n "index_currentTime" . }} <span id="time"></span>.</p>
                 {{ end }}
-                {{ with .Site.Params.email }}
                 <h3 class="subtitle is-3 has-text-centered top-pad">
-                    <a href="mailto:{{ . }}">{{ . }}</a>
+                    <a class="contactus" href="/contact">{{ i18n "index_EmailUs" }}</a>
                 </h3>
-                {{ end }}
+
+                <div class="markdown">
+                    {{ .Content }}
+                </div>
                 {{ partial "home/social.html" . }}
             </div>
             <!-- End Contact container -->
@@ -135,7 +130,7 @@
         {{ if .Site.Params.home.localTime }}
         <script>
             function update_localtime() {
-                const time = new Date().toLocaleTimeString('{{ .Site.Params.home.timeFormat }}', { timeZone: '{{ .Site.Params.home.timeZone }}', timeStyle: 'short' });
+                const time = new Date().toLocaleTimeString('{{ .Site.Params.home.timeFormat }}', { timeZone: '{{ .Site.Params.home.timeZone }}', hour: '2-digit', minute: '2-digit', timeStyle: 'short' });
                 document.getElementById('time').innerHTML = time;
             }
             update_localtime();

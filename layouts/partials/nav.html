@@ -19,7 +19,7 @@
                 {{ .Post }}
             </a>
             {{ range .Children }}
-            <!-- TODO: style children diffrent then parents-->
+            <!-- TODO: style children different then parents-->
             <a class="navbar-item" href="{{ .URL }}">
                 {{ .Pre }}
                 {{ .Name }}
@@ -47,31 +47,9 @@
                 {{ $pages = $pages | append . }}
             {{ end }}
 
-            {{ with .Site.GetPage "/projects" }}
-                {{ $pages = $pages | append . }}
-            {{ end }}
-
             {{ range sort $pages "Params.weight" }}
             {{ if ne .Name "contact.md" }}
-            {{ if eq (os.Stat .File.Dir).Name "projects" }}
-                <!-- Now for some cool projects -->
-                {{ if $isHome }}
-                <a class="navbar-item" href="{{ printf "#%s" ( .Title | urlize) | relLangURL }}">{{ .Title | markdownify }}</a>
-                {{ else }}
-                {{ $pageIsInProjects := eq $.Page.Section "projects"}}
-                {{ if not (and $pageIsInProjects (eq $.Page.Kind "section")) }}
-                  <a class="navbar-item" href="{{ .Permalink }}">
-                  {{ if $pageIsInProjects }}
-                  {{ i18n "nav_backToSection" . }}
-                  {{ else }}
-                  <!-- fix-224 -->
-                  {{ .Title }}
-                  <!-- end fix-224 -->
-                  {{ end }}
-                  </a>
-                {{ end }}
-                {{ end }}
-            {{ else if eq (os.Stat .File.Dir).Name "blog" }}
+            {{ if eq (os.Stat .File.Dir).Name "blog" }}
                 <!-- Let`s show some blog posts -->
                 {{ if $isHome }}
                 <a class="navbar-item" href="{{ printf "#%s" ( .Title | urlize) | relLangURL }}">{{ .Title | markdownify }}</a>
