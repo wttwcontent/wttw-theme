@@ -4,7 +4,7 @@
         {{ . | markdownify }}
     {{ else }}
         <span class="footer-text">
-            {{ i18n "footer_text" . | markdownify }}
+            {{ i18n "footer_text" (dict "ThisYear" (now.Format `2006`)) | markdownify }}
         </span>
     {{ end }}
     </div>
