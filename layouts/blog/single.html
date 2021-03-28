@@ -42,7 +42,7 @@
      <p>
          {{ $taxonomy_term | title }}: 
           {{ range $key, $value := $taxonomy }}
-           <a href="{{ (printf "/%s/" $taxonomy_term) | relLangURL }}{{ . | urlize }}">
+           <a href="{{(relref $.Page (printf `/%s/%s` $taxonomy_term $value | urlize)) | relLangURL}}">
              {{ $value }}</a>{{ if ne (add $key 1) $len }},{{ end }}
          {{ end }}
         </p>
@@ -65,6 +65,5 @@
 	Previous: <a class="link-reverse" href="{{ .PrevPage.Permalink }}?ref=footer">{{ .PrevPage.Title | truncate 50 "..."}} »</a>
 	{{ end }}
 </div>
-<p>Now is {{now.Format `2006` }}</p>
 {{ partial "comments.html" . }}
 {{ end }}
